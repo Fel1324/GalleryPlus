@@ -5,7 +5,7 @@ import { MainContent } from "../components/main-content";
 export function LayoutMain() {
   return (
     <>
-      <MainHeader className="mt-9" />
+      <MainHeader className="mt-9 max-md:gap-5"/>
       
       <MainContent>
         <Outlet />

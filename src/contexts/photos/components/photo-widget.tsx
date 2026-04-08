@@ -18,10 +18,10 @@ export function PhotoWidget({ photo, loading }: PhotoWidgetProps) {
         <ImagePreview
           src={`/images/${photo.imageId}`}
           title={photo.title}
-          imageClassName="w-full h-45 rounded-lg"
+          imageClassName="w-43.5 h-43.5 rounded-lg max-[57.1875rem]:w-full"
         />
       ) : (
-        <Skeleton className="w-full h-45 rounded-lg" />
+        <Skeleton className="w-43.5 h-43.5 rounded-lg max-[57.1875rem]:w-full" />
       )}
 
       <div className="flex flex-col gap-2">
