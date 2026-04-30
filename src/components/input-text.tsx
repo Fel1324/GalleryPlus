@@ -56,7 +56,7 @@ export function InputText({ size, disabled, className, icon, error, ...props}: I
 
       {error && (
         <Text variant="label-small" className="text-accent-red">
-          Um erro do campo
+          {error}
         </Text>
       )}
     </div>

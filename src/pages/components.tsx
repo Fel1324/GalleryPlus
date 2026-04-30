@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { ImagePreview } from "../components/image-preview";
 import { Dialog, DialogBody, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from "../components/dialog";
 
-export default function Components() {
+export function Components() {
   const form = useForm();
 	const file = form.watch("file")
 	const fileSource = file?.[0] ? URL.createObjectURL(file[0]) : undefined

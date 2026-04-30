@@ -16,7 +16,7 @@ export function PhotoWidget({ photo, loading }: PhotoWidgetProps) {
     <div className="flex flex-col gap-4">
       {!loading ? (
         <ImagePreview
-          src={`/images/${photo.imageId}`}
+          src={`${import.meta.env.VITE_IMAGES_URL}/${photo.imageId}`}
           title={photo.title}
           imageClassName="w-43.5 h-43.5 rounded-lg max-[57.1875rem]:w-full"
         />
@@ -31,7 +31,7 @@ export function PhotoWidget({ photo, loading }: PhotoWidgetProps) {
           <Skeleton className="w-full h-6" />
         )}
 
-        <div className="flex gap-1 min-h-4.5">
+        <div className="flex gap-1 min-h-5.5">
           {!loading ? (
             <>
               {photo.albums.slice(0, 1).map(album => (
