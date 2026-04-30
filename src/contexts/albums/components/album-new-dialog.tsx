@@ -26,8 +26,6 @@ export function AlbumNewDialog({ trigger }: AlbumNewDialogProps) {
   const { photos, isLoadingPhotos } = usePhotos()
   const { createAlbum } = useAlbum()
   const [isCreatingAlbum, setIsCreatingAlbum] = useTransition()
-  
-  console.log(photos)
 
   useEffect(() => {
     if(!modalOpen) {
@@ -35,17 +33,17 @@ export function AlbumNewDialog({ trigger }: AlbumNewDialogProps) {
     }
   }, [modalOpen, form])
 
-  function handleTogglePhoto(selected: boolean, photoId: string) {
+  function handleTogglePhoto(photoId: string) {
     const photoIds = form.getValues("photosIds") || []
-    let newValue = []
+    const photoSet = new Set(photoIds)
 
-    if(selected) {
-      newValue = [...photoIds, photoId]
+    if(photoSet.has(photoId)) {
+      photoSet.delete(photoId)
     } else {
-      newValue = photoIds.filter(id => id !== photoId)
+      photoSet.add(photoId)
     }
 
-    form.setValue("photosIds", newValue)
+    form.setValue("photosIds", Array.from(photoSet))
   }
 
   function handleSubmit(payload: AlbumNewFormSchema) {
@@ -75,7 +73,7 @@ export function AlbumNewDialog({ trigger }: AlbumNewDialogProps) {
             <div className="space-y-3">
               <Text variant="label-small" className="inline-block">Fotos cadastradas</Text>
 
-              {!isLoadingPhotos && photos.length > 0 && (
+              {!isLoadingPhotos && photos && photos.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {photos.map(photo => (
                     <PhotoImageSelectable
@@ -83,7 +81,7 @@ export function AlbumNewDialog({ trigger }: AlbumNewDialogProps) {
                     src={`${import.meta.env.VITE_IMAGES_URL}/${photo.imageId}`}
                     title={photo.title}
                     imageClassName="w-21 h-21"
-                    onSelectImage={(selected) => handleTogglePhoto(selected, photo.id)}
+                    onSelectImage={() => handleTogglePhoto(photo.id)}
                     />
                   ))}
                 </div>

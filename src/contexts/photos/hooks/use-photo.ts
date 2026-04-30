@@ -3,6 +3,8 @@ import { api, fetcher } from "../../../helpers/api";
 import { toast } from "sonner";
 import type { Photo } from "../models/photo";
 import type { PhotoNewFormSchema } from "../schemas";
+import { usePhotoAlbums } from "./use-photo-albums";
+import { useNavigate } from "react-router";
 
 interface PhotoDetailResponse extends Photo{
   nextPhotoId?: string;
@@ -10,6 +12,8 @@ interface PhotoDetailResponse extends Photo{
 }
 
 export function usePhoto(id?: string) {
+  const navigate = useNavigate()
+
   const { data, isLoading } = useQuery<PhotoDetailResponse>({
     queryKey: ["photo", id],
     queryFn: () => fetcher(`/photos/${id}`),
@@ -17,6 +21,8 @@ export function usePhoto(id?: string) {
   })
 
   const queryClient = useQueryClient()
+
+  const { managePhotoOnAlbum } = usePhotoAlbums()
 
   async function createPhoto(payload: PhotoNewFormSchema) {
     try {
@@ -33,9 +39,7 @@ export function usePhoto(id?: string) {
       })
 
       if(payload.albumsIds && payload.albumsIds.length > 0) {
-        await api.put(`/photos/${photo.id}/albums`, {
-          albumsIds: payload.albumsIds
-        })
+        await managePhotoOnAlbum(photo.id, payload.albumsIds)
       }
 
       queryClient.invalidateQueries({queryKey: ["photos"]})
@@ -48,11 +52,25 @@ export function usePhoto(id?: string) {
     }
   }
 
+  async function deletePhoto(photoId: string) {
+      try {
+        await api.delete(`/photos/${photoId}`)
+        toast.success("Foto excluida com sucesso!")
+
+        navigate("/");
+
+      } catch (error) {
+        toast.error("Erro ao excluir foto!")
+        throw error
+      }
+  }
+
   return {
     photo: data,
     nextPhotoId: data?.nextPhotoId,
     previousPhotoId: data?.previousPhotoId,
     isLoadingPhoto: isLoading,
-    createPhoto
+    createPhoto,
+    deletePhoto
   }
 }
